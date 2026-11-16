@@ -1,0 +1,19 @@
+[project]
+name = "exe-3"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "jupyter>=1.1.1",
+]
+
+[tool.uv]
+link-mode = "copy"
+
+[project.scripts]
+exe-3 = "exe_3:main"
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
