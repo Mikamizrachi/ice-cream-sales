@@ -1,4 +1,5 @@
 import sys, os, csv
+import numpy as np
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog
 from About import About
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -81,6 +82,11 @@ class IceCreamWindow(QWidget):
         self.ax.set_title("Ice Cream Revenue vs. Temperature")
         self.ax.set_xlabel("Temperature (°C)")
         self.ax.set_ylabel("Revenue ($)")
+
+        m, b = np.polyfit(self.temperatures, self.revenues, 1)
+        x = np.array([min(self.temperatures), max(self.temperatures)])
+        self.ax.plot(x, m * x + b, color="red", label=f"y = {m:.2f}x + {b:.2f}")
+        self.ax.legend()
 
         self.canvas.draw()                     
 
