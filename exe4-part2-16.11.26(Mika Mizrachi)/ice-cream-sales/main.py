@@ -1,5 +1,5 @@
-import sys, os
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QVBoxLayout, QHBoxLayout
+import sys, os, csv
+from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog
 from About import About
 
 
@@ -19,6 +19,8 @@ class IceCreamWindow(QWidget):
         self.open_btn = QPushButton("Choose File")
         self.open_btn.setObjectName("chooseBtn")
         self.open_btn.setFixedWidth(250)
+        self.open_btn.clicked.connect(self.load_file)
+
 
         top_row = QHBoxLayout()
         top_row.addWidget(self.about_btn)
@@ -40,6 +42,23 @@ class IceCreamWindow(QWidget):
     def show_about(self):
         self.about = About()
         self.about.show()
+
+
+    def load_file(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Choose file", "", "CSV Files (*.csv)")
+        if not file_name:
+            return
+
+        self.temperatures.clear()
+        self.revenues.clear()
+        with open(file_name, newline="", encoding="utf-8-sig") as f:
+            reader = csv.reader(f)
+            next(reader)                     
+            for row in reader:
+                self.temperatures.append(float(row[0]))
+                self.revenues.append(float(row[1]))
+
+        print(self.temperatures[:5], self.revenues[:5])     
 
 
 if __name__ == "__main__":
