@@ -1,3 +1,4 @@
+import os
 from PySide6.QtWidgets import QApplication, QWidget, QLabel
 from PySide6.QtGui import QPixmap
 
@@ -29,7 +30,8 @@ class About(QWidget):
         self.my_picture = QLabel(self)
         self.my_picture.setGeometry(75, 60, 200, 200)
         self.my_picture.setStyleSheet("border : 4px solid white ; border-radius : 10px")
-        image = QPixmap("mika.jpg").scaled(200, 200)
+        image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mika.jpg")
+        image = QPixmap(image_path).scaled(200, 200)
         self.my_picture.setPixmap(image)
 
         self.github = QLabel('🐙<a href="https://github.com/Mikamizrachi">  My GitHub</a>', self)
@@ -43,3 +45,4 @@ if __name__ == "__main__":
     window = About()
     window.show()
     app.exec()
+
