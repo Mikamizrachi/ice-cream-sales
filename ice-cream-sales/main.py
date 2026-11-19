@@ -1,6 +1,9 @@
 import sys, os, csv
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog
 from About import About
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
 
 
 class IceCreamWindow(QWidget):
@@ -22,6 +25,12 @@ class IceCreamWindow(QWidget):
         self.open_btn.clicked.connect(self.load_file)
 
 
+        self.figure = Figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.toolbar = NavigationToolbar(self.canvas, self)
+        self.ax = self.figure.add_subplot(111)
+
+
         top_row = QHBoxLayout()
         top_row.addWidget(self.about_btn)
         top_row.addStretch()
@@ -34,7 +43,8 @@ class IceCreamWindow(QWidget):
         layout = QVBoxLayout(self)
         layout.addLayout(top_row)
         layout.addLayout(choose_row)
-        layout.addStretch()
+        layout.addWidget(self.toolbar)
+        layout.addWidget(self.canvas)
 
 
 
@@ -58,7 +68,21 @@ class IceCreamWindow(QWidget):
                 self.temperatures.append(float(row[0]))
                 self.revenues.append(float(row[1]))
 
-        print(self.temperatures[:5], self.revenues[:5])     
+        self.plot_graph()   
+
+    def plot_graph(self):
+        self.ax.clear()                  
+
+        self.ax.scatter(self.temperatures, self.revenues, s=1)
+
+        self.ax.spines["top"].set_visible(False)
+        self.ax.spines["right"].set_visible(False)
+
+        self.ax.set_title("Ice Cream Revenue vs. Temperature")
+        self.ax.set_xlabel("Temperature (°C)")
+        self.ax.set_ylabel("Revenue ($)")
+
+        self.canvas.draw()                     
 
 
 if __name__ == "__main__":
